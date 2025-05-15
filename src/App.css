@@ -1,0 +1,67 @@
+.container {
+    height: 100vh;
+}
+
+.chat {
+    height: 100vh;
+    overflow: auto;
+    flex-grow: 1;
+}
+
+.ant-bubble-list {
+    flex-grow: 1;
+    padding: 20px 20px 100px;
+}
+
+.ant-bubble {
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.conversation-container {
+    height: 100%;
+    position: relative;
+}
+
+.conversation-wrapper {
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+    background-color: white;
+    transition: transform ease-in-out 300ms;
+}
+
+@media (max-width: 1024px) {
+    .conversation-wrapper {
+        transform: translateX(-100%);
+    }
+}
+
+.ant-conversations {
+    width: 200px;
+}
+
+.sender-container {
+    padding: 0 20px 20px;
+}
+
+.sender-wrapper {
+    position: relative;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    height: 56px;
+}
+
+.ant-sender {
+    background-color: white;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.ant-divider-vertical {
+    height: 100%;
+}
