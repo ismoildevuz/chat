@@ -1,16 +1,39 @@
+.ant-float-btn-group-wrap {
+    right: 0;
+}
+
+.ant-bubble-avatar {
+    align-self: flex-end !important;
+}
+
+.ant-bubble-end .ant-bubble-content {
+    border-end-end-radius: 2px;
+}
+
+.ant-bubble-start .ant-bubble-content {
+    border-end-start-radius: 2px;
+}
+
 .container {
-    height: 100vh;
+    height: 500px;
+    width: 500px;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+        0 3px 6px -4px rgba(0, 0, 0, 0.12),
+        0 9px 28px 8px rgba(0, 0, 0, 0.05);
 }
 
 .chat {
-    height: 100vh;
+    height: 100%;
     overflow: auto;
     flex-grow: 1;
+    padding-top: 20px;
 }
 
 .ant-bubble-list {
     flex-grow: 1;
-    padding: 20px 20px 100px;
+    padding: 0 20px 100px;
 }
 
 .ant-bubble {
@@ -20,6 +43,7 @@
 }
 
 .conversation-container {
+    display: none;
     height: 100%;
     position: relative;
 }
