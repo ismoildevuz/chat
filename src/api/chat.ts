@@ -21,8 +21,8 @@ export type ChatSessionAnswer = {
     remaining: number
 }
 
-export const getChatSession = (sessionId: number) => {
-    return fetch(`${baseUrl}/api/chat/${sessionId}`).then(res => res.json())
+export const getChatSession = async (sessionId: number) => {
+    return await fetch(`${baseUrl}/api/chat/${sessionId}`).then(res => res.json())
 }
 
 export const postChatSession = async (sessionId: number, body: ChatSessionQuestion) => {

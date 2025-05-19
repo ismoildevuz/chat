@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Divider, Flex, FloatButton, type GetRef, message as antdMessage } from 'antd';
-import { MessageOutlined, OpenAIFilled, UserOutlined } from '@ant-design/icons';
+import { Button, ConfigProvider, Divider, Flex, FloatButton, type GetRef, message as antdMessage } from 'antd';
+import { CloseOutlined, MessageOutlined, OpenAIFilled, UserOutlined } from '@ant-design/icons';
 import { Bubble, Conversations, Sender, useXAgent, useXChat, XProvider } from '@ant-design/x';
 import type { MessageInfo } from '@ant-design/x/es/use-x-chat';
 import type { RolesType } from '@ant-design/x/es/bubble/BubbleList';
@@ -23,7 +23,8 @@ const roles: RolesType = {
 const App = () => {
     const senderRef = useRef<GetRef<typeof Sender>>(null);
     const [content, setContent] = useState('');
-    const [sessionId] = useState(44);
+    const [open, setOpen] = useState(true)
+    const [sessionId] = useState(45);
 
     const { data: sessionMessages } = useQuery<ChatSessionMessage[]>({
         queryKey: ['session', sessionId],
@@ -42,22 +43,21 @@ const App = () => {
                 onSuccess([response.answer]);
             } catch (err) {
                 onError(err as Error);
-                antdMessage.error('Failed to send message');
+                antdMessage.error('Xabar yuborishda xatolik');
             }
         },
     });
 
     const { onRequest, messages, setMessages } = useXChat<string>({
         agent,
-        defaultMessages: [],
-        requestPlaceholder: 'Thinking...',
-        requestFallback: 'Something went wrong. Try again later.',
+        requestPlaceholder: 'Kutilmoqda...',
+        requestFallback: "Xatolik yuz berdi. Keyinroq qayta urinib ko'ring.",
     });
 
     useEffect(() => {
         const initialMessages: MessageInfo<string>[] = [{
             id: '123',
-            message: 'Hello, 👋. How can I help you?',
+            message: 'Salom, 👋. Qanday yordam berishim mumkin?',
             status: 'success'
         }]
 
@@ -76,61 +76,72 @@ const App = () => {
         senderRef.current?.focus()
     }, [])
 
+    const bubbleItems = useMemo(() => {
+        return messages.map(({ id, message, status }) => ({
+            key: id,
+            loading: status === 'loading',
+            role: status === 'local' ? ChatRoleEnum.User : ChatRoleEnum.Assistant,
+            content: message,
+        }))
+    }, [messages])
+
     return (
-        <FloatButton.Group
-            trigger="click"
-            type="primary"
-            icon={<MessageOutlined />}
-        >
+        <ConfigProvider>
             <XProvider>
-                <Flex className="container">
-                    <div className='conversation-container'>
-                        <Flex className='conversation-wrapper'>
-                            <Conversations
-                                defaultActiveKey="1"
-                                items={[
-                                    {
-                                        key: '1',
-                                        label: 'Conversation - 1',
-                                    },
-                                    {
-                                        key: '2',
-                                        label: 'Conversation - 2',
-                                    },
-                                ]}
-                            />
-                            <Divider type="vertical" />
-                        </Flex>
-                    </div>
-                    <Flex className="chat" vertical>
-                        <Bubble.List
-                            roles={roles}
-                            items={(messages.map(({ id, message, status }) => ({
-                                key: id,
-                                loading: status === 'loading',
-                                role: status === 'local' ? ChatRoleEnum.User : ChatRoleEnum.Assistant,
-                                content: message,
-                            })))}
-                        />
-                        <div className="sender-container">
-                            <div className="sender-wrapper">
-                                <Sender
-                                    ref={senderRef}
-                                    placeholder='Ask anything'
-                                    loading={agent.isRequesting()}
-                                    value={content}
-                                    onChange={setContent}
-                                    onSubmit={(nextContent) => {
-                                        onRequest(nextContent);
-                                        setContent('');
-                                    }}
+                <FloatButton.Group
+                    open={open}
+                    onOpenChange={setOpen}
+                    trigger="click"
+                    type="primary"
+                    icon={<MessageOutlined />}
+                >
+                    <Flex vertical className="container">
+                        <div className='conversation-container'>
+                            <Flex className='conversation-wrapper'>
+                                <Conversations
+                                    defaultActiveKey="1"
+                                    items={[
+                                        {
+                                            key: '1',
+                                            label: 'Conversation - 1',
+                                        },
+                                        {
+                                            key: '2',
+                                            label: 'Conversation - 2',
+                                        },
+                                    ]}
                                 />
-                            </div>
+                                <Divider type="vertical" />
+                            </Flex>
                         </div>
+                        <Flex justify='end' className='chat-header'>
+                            <Button onClick={() => setOpen(false)} icon={<CloseOutlined width={32} height={32} />} shape='circle' type='text' ></Button>
+                        </Flex>
+                        <Flex className="chat" vertical>
+                            <Bubble.List
+                                roles={roles}
+                                items={bubbleItems}
+                            />
+                            <div className="sender-container">
+                                <div className="sender-wrapper">
+                                    <Sender
+                                        ref={senderRef}
+                                        placeholder='Savol bering'
+                                        loading={agent.isRequesting()}
+                                        value={content}
+                                        onChange={setContent}
+                                        onSubmit={(nextContent) => {
+                                            onRequest(nextContent);
+                                            setContent('');
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </Flex>
                     </Flex>
-                </Flex>
+                </FloatButton.Group>
             </XProvider>
-        </FloatButton.Group>
+        </ConfigProvider>
     );
 };
 

@@ -2,6 +2,14 @@
     right: 0;
 }
 
+@media (max-width: 640px) {
+    .ant-float-btn-group-wrap {
+        right: -24px;
+        bottom: -48px !important;
+        z-index: 1001 !important;
+    }
+}
+
 .ant-bubble-avatar {
     align-self: flex-end !important;
 }
@@ -15,20 +23,32 @@
 }
 
 .container {
-    height: 500px;
-    width: 500px;
-    border-radius: 8px;
-    border: 1px solid #f0f0f0;
-    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
-        0 3px 6px -4px rgba(0, 0, 0, 0.12),
-        0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    width: 100vw;
+    height: 100dvh;
+    background-color: white;
+    transition: width 0.2s, height 0.2s;
+}
+
+@media (min-width: 640px) {
+    .container {
+        height: 500px;
+        width: 500px;
+        border-radius: 8px;
+        border: 1px solid #f0f0f0;
+        box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+            0 3px 6px -4px rgba(0, 0, 0, 0.12),
+            0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    }
+}
+
+.chat-header {
+    padding: 4px;
 }
 
 .chat {
     height: 100%;
     overflow: auto;
     flex-grow: 1;
-    padding-top: 20px;
 }
 
 .ant-bubble-list {
@@ -88,4 +108,45 @@
 
 .ant-divider-vertical {
     height: 100%;
+}
+
+.ant-float-btn:hover {
+    transform: scale(1.05);
+    transition: transform 0.1s ease-in-out;
+}
+
+.ant-float-btn {
+    position: relative;
+    z-index: 1;
+}
+
+.ant-float-btn::before,
+.ant-float-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: #1677ff50;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    animation: pulse-wave 2s infinite;
+}
+
+.ant-float-btn::after {
+    animation-delay: 1s;
+}
+
+@keyframes pulse-wave {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
 }
